@@ -1,0 +1,30 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+      <h2>Lista de benefícios</h2>
+      <button (click)="adicionar()" class="btn btn-info" style="margin-left: 10px">Adicionar</button>
+    </div>
+    <div class="panel-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Número</th>
+            <th>Beneficiario</th>
+            <th>CPF</th>
+            <th>Matricula</th>
+            <th>Orgao</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let beneficio of beneficios | async">
+            <td>{{beneficio.numero}}</td>
+            <td>{{beneficio.funcionario.name}}</td>
+            <td>{{beneficio.funcionario.cpf}}</td>
+            <td>{{beneficio.funcionario.matricula}}</td>
+            <td>{{beneficio.funcionario.orgao.nome}}</td>
+            <td><button (click)="beneficioArquivos(beneficio.id)" class="btn btn-info" style="margin-left: 10px">Arquivos</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

@@ -1,0 +1,31 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+
+      <h2>Lista de Arquivos</h2>
+      <button (click)="adicionar()" class="btn btn-info" style="margin-left: 10px">Adicionar</button>
+    </div>
+    <div class="panel-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>codigo</th>
+            <th>descrição</th>
+            <th>tipo</th>
+            <th>tamanho</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let arquivo of arquivos | async">
+            <td>{{arquivo.id}}</td>
+            <td>{{arquivo.descricao}}</td>
+            <td>{{arquivo.tipo}}</td>
+            <td>{{arquivo.tamanho}}</td>
+            <td><button (click)="arquivoVisualizar(arquivo.id)" class="btn btn-info" style="margin-left: 10px">Visualizar</button>
+              <button (click)="arquivoMovimentacoes(arquivo.id)" class="btn btn-info" style="margin-left: 10px">Movimentações</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

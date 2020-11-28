@@ -1,0 +1,29 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+      <h2>Lista de Arquivos</h2>
+    </div>
+    <div class="panel-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>codigo</th>
+            <th>data</th>
+            <th>nome</th>
+            <th>tipo</th>
+            <th>size</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="arquivo">
+            <td>{{arquivo.id}}</td>
+            <td>{{arquivo.name}}</td>
+            <td>{{arquivo.type}}</td>
+            <td>{{arquivo.size}}</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
