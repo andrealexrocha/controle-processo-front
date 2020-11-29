@@ -1,29 +1,15 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a [routerLink]="['']">Benefícios</a></li>
+    <li class="breadcrumb-item"><a href="javascript:;" (click)="cancelar()">Arquivos</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Visualizar Arquivo</li>
+  </ol>
+</nav>
 <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h2>Lista de Arquivos</h2>
-    </div>
-    <div class="panel-body">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>codigo</th>
-            <th>data</th>
-            <th>nome</th>
-            <th>tipo</th>
-            <th>size</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="arquivo">
-            <td>{{arquivo.id}}</td>
-            <td>{{arquivo.name}}</td>
-            <td>{{arquivo.type}}</td>
-            <td>{{arquivo.size}}</td>
-            <td>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <div class="panel-heading">
+    <h2 class="text-center">Visualizar Arquivo</h2>
+  <div>
+  <br> 
+<div style="height: 600px">
+  <ng2-pdfjs-viewer #pdfViewer></ng2-pdfjs-viewer>
+</div>

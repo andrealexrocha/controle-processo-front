@@ -6,7 +6,8 @@ import { Observable } from "rxjs";
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { FuncionarioService } from '../../funcionario/funcionario.service';
-import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertService } from 'src/app/shared/alert';
 
 @Component({
   selector: 'app-beneficio-adicionar',
@@ -17,12 +18,12 @@ export class BeneficioAdicionarComponent implements OnInit {
 
   funcionarios: Observable<Funcionario[]>
   beneficio: Beneficio = new Beneficio();
-  submitted = false;
   form: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
     private beneficioService: BeneficioService,
     private funcionarioService: FuncionarioService,
+    public alertService: AlertService,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -31,41 +32,39 @@ export class BeneficioAdicionarComponent implements OnInit {
       funcionario: ['', Validators.required]
     });
 
-    this.reloadData();
+    this.atualizarDados();
     
   }
 
-  reloadData() {
-
+  atualizarDados() {
     this.funcionarios = this.funcionarioService.listarFuncionario()
     .pipe(
       map(response=>response.data)
-    )
-      console.log(this.funcionarios);
+    );
+
   }
 
-  save() {
+  salvar() {
     this.beneficioService
-    .createBeneficio(this.beneficio).subscribe(data => {
-      console.log(data)
-      this.beneficio = new Beneficio();
-      this.gotoList();
-    }, 
-    error => console.log(error));
+    .salvar(this.beneficio).subscribe(data => {
+       this.voltarBeneficios();
+    }, error => {
+      this.alertService.error(error.error.message);
+    });
   }
 
-  gotoList() {
-    this.router.navigate(['/beneficios']);
+  voltarBeneficios() {
+    this.router.navigate(['']);
   }
 
-  onSubmit() {
+  enviarForm() {
+    
     this.beneficio = new Beneficio();
     this.beneficio.funcionario = new Funcionario();
     this.beneficio.funcionario.id = this.form.get('funcionario').value;
-    
-    console.log(this.form.get('funcionario').value);
     this.beneficio.numero = this.form.get('numero').value;
-    this.save();
+
+    this.salvar();
   
   }
   

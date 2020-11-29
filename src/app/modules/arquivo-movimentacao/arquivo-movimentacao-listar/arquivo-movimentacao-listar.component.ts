@@ -3,7 +3,8 @@ import { ArquivoMovimentacao } from 'src/app/shared/model/arquivoMovimentacao.mo
 import { Observable } from "rxjs";
 import { ArquivoMovimentacaoService } from '../arquivo-movimentacao.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { map, filter } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { AlertService } from 'src/app/shared/alert';
 
 @Component({
   selector: 'app-arquivo-movimentacao-listar',
@@ -17,16 +18,17 @@ export class ArquivoMovimentacaoListarComponent implements OnInit {
   movimentacoes: Observable<ArquivoMovimentacao[]>
 
   constructor(private arquivoMovimentacaoService: ArquivoMovimentacaoService,
+    public alertService: AlertService,
     private route: ActivatedRoute,private router: Router) { }
 
   ngOnInit(): void {
     this.beneficioId = Number(this.route.snapshot.queryParamMap.get("beneficio"));
     this.arquivoId = Number(this.route.snapshot.queryParamMap.get("arquivo"));
     
-    this.reloadData();
+    this.atualizarDados();
   }
 
-  reloadData() {
+  atualizarDados() {
     this.movimentacoes = this.arquivoMovimentacaoService.listarMovimentacoesArquivo(this.arquivoId)
     .pipe(
       map(response=>response.data)
@@ -37,4 +39,15 @@ export class ArquivoMovimentacaoListarComponent implements OnInit {
     this.router.navigate(['adicionar-movimentacao'], { queryParams: { beneficio: this.beneficioId, arquivo: this.arquivoId } });
   }
 
+  cancelar() {
+    this.router.navigate(['listar-arquivos'], { queryParams: { beneficio: this.beneficioId } });
+  }
+
+  excluir(id: number){
+    this.arquivoMovimentacaoService.excluir(id).subscribe( data => {
+      this.atualizarDados()
+    }, error => {
+      this.alertService.error(error.error.message);
+    })
+  }
 }

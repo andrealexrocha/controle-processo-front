@@ -1,23 +1,27 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class BeneficioService {
 
-  private baseUrl = 'http://localhost:8080/v1/beneficios';
+  private baseUrl = `${environment.apiUrl}/beneficios`;
 
   constructor(private http: HttpClient) { }
 
-  listarBeneficios(): Observable<any> {
+  listar(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}`);
   }
 
-  createBeneficio(beneficio: Object): Observable<Object> {
-    console.log(beneficio);
-    return this.http.post(`${this.baseUrl}/save`, beneficio);
+  salvar(beneficio: Object): Observable<Object> {
+    return this.http.post(`${this.baseUrl}/salvar`, beneficio);
   }
   
+  excluir(id: Number): Observable<Object> {
+    return this.http.delete(`${this.baseUrl}/excluir/${id}`);
+  }
+
 }

@@ -14,6 +14,8 @@ import { ArquivoMovimentacaoDetalharComponent } from './modules/arquivo-moviment
 import { ArquivoMovimentacaoListarComponent } from './modules/arquivo-movimentacao/arquivo-movimentacao-listar/arquivo-movimentacao-listar.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ReactiveFormsModule, FormsModule  } from '@angular/forms';
+import { PdfJsViewerModule } from 'ng2-pdfjs-viewer';
+import { AlertModule } from './shared/alert';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,7 @@ import { ReactiveFormsModule, FormsModule  } from '@angular/forms';
     ArquivoListarComponent,
     ArquivoMovimentacaoAdicionarComponent,
     ArquivoMovimentacaoDetalharComponent,
-    ArquivoMovimentacaoListarComponent
+    ArquivoMovimentacaoListarComponent,
   ],
   imports: [
     ReactiveFormsModule,
@@ -33,7 +35,9 @@ import { ReactiveFormsModule, FormsModule  } from '@angular/forms';
     PdfViewerModule,
     HttpClientModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    PdfJsViewerModule,
+    AlertModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,6 +1,16 @@
-<h3>Cadastrar Beneficio</h3>
-<div [hidden]="submitted" style="width: 400px;">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a [routerLink]="['']">Benefícios</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Novo Benefício</li>
+  </ol>
+</nav>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h2 class="text-center">Cadastrar Benefício</h2>
+  <div>
+  <br>
+  <div class="container">
+  <form [formGroup]="form">
 
     <div class="form-group">
       <label for="name">codigo</label>
@@ -15,12 +25,14 @@
     </select>
       
     </div>
-
-    <button type="submit" class="btn btn-success">Submit</button>
+    <div class="text-center">
+      <div> 
+        <button class="btn btn-success btn-sx" type="button" (click)="enviarForm()">Salvar</button>
+      </div>
+      <br>
+      <div>
+        <button class="btn btn-danger btn-sx" type="button" (click)="voltarBeneficios()">Cancelar</button>
+      </div>
+  </div>
   </form>
-</div>
-
-<div [hidden]="!submitted">
-  <h4>You submitted successfully!</h4>
-  <!-- <button class="btn btn-success" (click)="newEmployee()">Add</button> -->
 </div>

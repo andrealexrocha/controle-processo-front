@@ -4,11 +4,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { Observable } from "rxjs";
 import { map } from 'rxjs/operators';
-import { Orgao } from 'src/app/shared/model/orgao.model.component';
 import { ArquivoMovimentacao } from 'src/app/shared/model/arquivoMovimentacao.model.component';
 import { ArquivoMovimentacaoService } from '../arquivo-movimentacao.service';
 import { SetorService } from '../../setor/setor.service';
 import { Setor } from 'src/app/shared/model/setor.model.component';
+import { AlertService } from 'src/app/shared/alert';
 
 @Component({
   selector: 'app-arquivo-movimentacao-adicionar',
@@ -24,6 +24,7 @@ export class ArquivoMovimentacaoAdicionarComponent implements OnInit {
   constructor(public formBuilder: FormBuilder, private http: HttpClient,
     private arquivoMovimentacaoService: ArquivoMovimentacaoService,
     private setorService: SetorService,
+    public alertService: AlertService,
     private route: ActivatedRoute, private router: Router,) { 
       this.beneficioId = Number(this.route.snapshot.queryParamMap.get("beneficio"));
       this.arquivoId = Number(this.route.snapshot.queryParamMap.get("arquivo"));
@@ -35,10 +36,10 @@ export class ArquivoMovimentacaoAdicionarComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    this.reloadData();
+    this.atualizarDados();
   }
 
-  reloadData() {
+  atualizarDados() {
 
     this.setores = this.setorService.listarSetores()
     .pipe(
@@ -46,8 +47,12 @@ export class ArquivoMovimentacaoAdicionarComponent implements OnInit {
     )
   }
 
-  cancelar() {
-    this.router.navigate(['arquivo-listar', this.beneficioId]);
+  voltarArquivos() {
+    this.router.navigate(['listar-arquivos'], { queryParams: { beneficio: this.beneficioId } });
+  }
+
+  voltarMovimentacoes() {
+    this.router.navigate(['listar-movimentacoes'], { queryParams: { beneficio: this.beneficioId , arquivo: this.arquivoId } });
   }
 
   submitForm() {
@@ -60,10 +65,15 @@ export class ArquivoMovimentacaoAdicionarComponent implements OnInit {
     arquivoMovimentacao.setorOrigem.id = this.form.get('origem').value;
     arquivoMovimentacao.arquivo_id = this.arquivoId;
 
+    this.salvar(arquivoMovimentacao);
+  }
 
-    this.http.post('http://localhost:8080/v1/movimentacoes/save',arquivoMovimentacao).subscribe(resp => {
+  salvar(arquivoMovimentacao: ArquivoMovimentacao){
+    this.arquivoMovimentacaoService.salvar(arquivoMovimentacao).subscribe(resp => {
       console.log(resp)
-      this.router.navigate(['listar-movimentacoes'], { queryParams: { beneficio: this.beneficioId , arquivo: this.arquivoId } });
+      this.voltarMovimentacoes();
+    }, error => {
+      this.alertService.error(error.error.message);
     })
   }
 

@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Arquivo } from 'src/app/shared/model/arquivo.model.component';
 import { ArquivoService } from '../arquivo.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-arquivo-detalhar',
@@ -10,26 +12,30 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class ArquivoDetalharComponent implements OnInit {
 
+  beneficioId: number;
   arquivoId: number;
-  arquivo: Arquivo;
+  @ViewChild('pdfViewer') public pdfViewer;
 
-  constructor(private arquivoService: ArquivoService,
-    private route: ActivatedRoute,private router: Router,) { }
+  constructor(private arquivoService: ArquivoService, private http: HttpClient,
+    private route: ActivatedRoute,private router: Router,) { 
+      this.beneficioId = Number(this.route.snapshot.queryParamMap.get("beneficio"));
+      this.arquivoId = Number(this.route.snapshot.queryParamMap.get("arquivo"));
+
+      this.arquivoService.baixar(this.arquivoId).subscribe(
+          (res) => {
+            console.log(res);
+              this.pdfViewer.pdfSrc = res; 
+              this.pdfViewer.refresh(); 
+          }
+      );
+    }
 
   ngOnInit(): void {
-    this.arquivo = new Arquivo();
-    this.arquivoId = this.route.snapshot.params['arquivoId'];
-    this.reloadData();
     
   }
-  reloadData() {
 
-    this.arquivoService.listarArquivo(this.arquivoId)
-    .subscribe(response => {
-      this.arquivo = response.data;
-      console.log(response);
-    }, error => console.log(error));
-
+  cancelar() {
+    this.router.navigate(['listar-arquivos'], { queryParams: { beneficio: this.beneficioId } });
   }
 
 }

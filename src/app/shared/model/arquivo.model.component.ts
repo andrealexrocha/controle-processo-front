@@ -6,7 +6,7 @@ export class Arquivo {
   name: string;
   type: string;
   size: number;
-  file: File;
+  binario: File;
   beneficio: Beneficio;
   arquivoTipo: ArquivoTipo;
 }

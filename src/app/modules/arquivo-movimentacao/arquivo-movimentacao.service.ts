@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ArquivoMovimentacao } from 'src/app/shared/model/arquivoMovimentacao.model.component';
-
+import { environment } from 'src/environments/environment'
+ 
 @Injectable({
   providedIn: 'root'
 })
 export class ArquivoMovimentacaoService {
 
-  private baseUrl = 'http://localhost:8080/v1/movimentacoes';
+  private baseUrl = `${environment.apiUrl}/movimentacoes`;
 
   constructor(private http: HttpClient) { }
 
@@ -16,19 +17,11 @@ export class ArquivoMovimentacaoService {
     return this.http.get<any>(`${this.baseUrl}/arquivo/${arquivoId}`);
   }
 
-  listarArquivo(arquivoId: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${arquivoId}`);
-  }
-
-  listarArquivoTipo(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/tipo`);
+  salvar(arquivoMovimentacao: ArquivoMovimentacao): Observable<Object> {
+    return this.http.post(`${this.baseUrl}/salvar`, arquivoMovimentacao);
   }
   
-  salvarArquivo(arquivo: any): Observable<any> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-
-    return this.http.post(`${this.baseUrl}/uploadFile`, arquivo, httpOptions);
+  excluir(id: Number): Observable<Object> {
+    return this.http.delete(`${this.baseUrl}/excluir/${id}`);
   }
 }

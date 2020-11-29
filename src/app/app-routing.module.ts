@@ -10,15 +10,14 @@ import { BeneficioListarComponent } from './modules/beneficio/beneficio-listar/b
 
 
 const routes: Routes = [
-  { path: 'beneficios', component: BeneficioListarComponent },
+  { path: '', component: BeneficioListarComponent },
   { path: 'beneficio-adicionar', component: BeneficioAdicionarComponent },
   { path: 'adicionar-arquivo', component: ArquivoAdicionarComponent },
   { path: 'listar-arquivos', component: ArquivoListarComponent },
-  { path: 'arquivo-detalhar/:arquivoId', component: ArquivoDetalharComponent },
+  { path: 'visualizar-arquivo', component: ArquivoDetalharComponent },
   { path: 'listar-movimentacoes', component: ArquivoMovimentacaoListarComponent },
   { path: 'adicionar-movimentacao', component: ArquivoMovimentacaoAdicionarComponent },
-  
-  
+    
 ];
 
 @NgModule({

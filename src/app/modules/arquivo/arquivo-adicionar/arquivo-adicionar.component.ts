@@ -1,14 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ArquivoTipo } from 'src/app/shared/model/arquivoTipo.model.component';
 import { Observable } from "rxjs";
 import { ArquivoService } from '../arquivo.service';
 import { map } from 'rxjs/operators';
-import { Arquivo } from 'src/app/shared/model/arquivo.model.component';
-import { Beneficio } from 'src/app/shared/model/beneficio.model.component';
-import { ArquivoUpload } from 'src/app/shared/model/arquivoUpload.model.component';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AlertService } from 'src/app/shared/alert';
 
 @Component({
   selector: 'app-arquivo-adicionar',
@@ -17,24 +14,25 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class ArquivoAdicionarComponent implements OnInit {
 
-  beneficioId: number = 0;
+  beneficioId: number;
 
   form: FormGroup;
   arquivoTipos: Observable<ArquivoTipo[]>
 
-  constructor(public fb: FormBuilder, private http: HttpClient,
-    private arquivoService: ArquivoService,
-    private route: ActivatedRoute, private router: Router,) {
-    this.form = this.fb.group({
-      name: [''],
-      arquivoTipo: [''],
-      avatar: [null]
-    })
+  constructor(public formBuilder: FormBuilder, private arquivoService: ArquivoService,
+    private route: ActivatedRoute, private router: Router,
+    public alertService: AlertService) {
+
+      this.beneficioId = Number(this.route.snapshot.queryParamMap.get("beneficio"));
+      this.form = this.formBuilder.group({
+        name: [''],
+        arquivoTipo: [''],
+        binario: [null]
+      })
   }
 
   ngOnInit() { 
     this.reloadData();
-    this.beneficioId = this.route.snapshot.params['beneficioId'];
   }
 
   reloadData() {
@@ -42,35 +40,40 @@ export class ArquivoAdicionarComponent implements OnInit {
     this.arquivoTipos = this.arquivoService.listarArquivoTipo()
     .pipe(
       map(response=>response.data)
-    )
-      console.log(this.arquivoTipos);
+    );
+
   }
 
   uploadFile(event) {
     const file = (event.target as HTMLInputElement).files[0];
     this.form.patchValue({
-      avatar: file
+      binario: file
     });
-    this.form.get('avatar').updateValueAndValidity()
+    this.form.get('binario').updateValueAndValidity()
   }
 
   submitForm() {
+
     var formData: any = new FormData();
-    formData.append("arquivo", this.form.get('avatar').value);
+    formData.append("arquivo", this.form.get('binario').value);
     formData.append("descricao", this.form.get('name').value);
-    formData.append("beneficioId", "2");
     formData.append("arquivoTipoId", this.form.get('arquivoTipo').value);
+    formData.append("beneficioId", this.beneficioId);
 
-
-    this.http.post('http://localhost:8080/v1/arquivos/upload',formData).subscribe(resp => {
-      console.log(resp)
-      this.router.navigate(['arquivo-listar', this.beneficioId]);
-    })
-
+    this.salvar(formData);
   }
 
-  cancelar() {
-    this.router.navigate(['arquivo-listar', this.beneficioId]);
+  salvar(form: FormData){
+    this.arquivoService.salvar(form).subscribe(resp => {
+      this.voltarArquivos();
+    }, error => {
+      console.log(error.error);
+      this.alertService.error(error.error.message);
+    })
+  }
+
+  voltarArquivos() {
+    this.router.navigate(['listar-arquivos'], { queryParams: { beneficio: this.beneficioId } });
   }
 
 }
